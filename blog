@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}Blog{% endblock %}
+
+<!-- CSS for products page -->
+{% block css %}
+    <link href={{url_for("static", filename="img/favicon.png")}} rel="icon">
+    <link href={{url_for("static", filename="img/apple-touch-icon.png")}} rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href={{url_for("static", filename="vendor/bootstrap/css/bootstrap.min.css")}} rel="stylesheet">
+    <link href={{url_for("static", filename="vendor/bootstrap-icons/bootstrap-icons.css")}} rel="stylesheet">
+    <link href={{url_for("static", filename="vendor/aos/aos.css")}} rel="stylesheet">
+    <link href={{url_for("static", filename="vendor/swiper/swiper-bundle.min.css")}} rel="stylesheet">
+    <link href={{url_for("static", filename="vendor/glightbox/css/glightbox.min.css")}} rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href={{url_for("static", filename="css/main.css")}} rel="stylesheet">
+
+    <style>
+        /* General styles for buttons and cards */
+        .btn-primary1, .btn-primary {
+            background-color: orange !important;
+            border-color: orange !important;
+            color: #000000;
+        }
+    
+        .btn-primary1:hover, .btn-primary:hover {
+            background-color: rgb(199, 135, 16) !important;
+            color: white;
+        }
+        .card-text, .card-price {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            overflow-wrap: anywhere;
+            text-align: center;
+            font-size: large;
+            display: -webkit-box;
+ /* Ograniczenie do 3 linii */
+            -webkit-box-orient: vertical;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+    
+        /* Ensure images have a fixed height and don't stretch */
+        img {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Umożliwia animację */
+}
+
+img:hover {
+    transform: scale(1.1); /* Powiększa obrazek */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25); /* Dodaje cień przy najechaniu */
+    border: 2px solid orange; /* Opcjonalnie - dodaje obramowanie */
+}
+    
+        body {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            background-color: #ffffff;
+        }
+    
+        footer {
+            grid-row: 3;
+        }
+    
+        /* Pagination styles */
+        .page-number {
+            background-color: orange;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 5px 10px;
+            border-radius: 50%;
+        }
+    
+        .pagination .page-link {
+            color: #000000;
+            border: 1px solid #ffffff;
+        }
+    
+        .pagination .page-link:hover {
+            background-color: #ffa600;
+            color: white;
+        }
+    
+        .pagination .page-item.active .page-link {
+            background-color: orange;
+            border-color: orange;
+            color: white;
+        }
+    
+        /* Filter and search container styles */
+        .filter-search-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+    
+        .filter-search-container form {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+    
+        .filter-search-container select,
+        .filter-search-container input {
+            margin-right: 20px;
+        }
+    
+        /* Category bar styles for vertical right position */
+        .category-bar {
+            position: fixed;
+            right: 0;
+            top: 100px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: white;
+            padding: 30px;
+            border-left: 2px solid #ddd;
+        }
+    
+        .category-bar .btn-link {
+            text-align: left;
+            padding: 5px;
+            color: black;
+            text-decoration: none;
+        }
+    
+        .category-bar .btn-link:hover {
+            text-decoration: underline;
+            color: orange;
+        }
+    
+        /* Adjust the layout to leave space for the category bar */
+        .container {
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+    
+        /* Ensure that all cards have the same height */
+        .row.row-cols-1.row-cols-sm-2.row-cols-md-3.g-3 .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Make the card take full height */
+            margin-bottom: 20px; /* Margines między kartami w pionie */
+        }
+    
+        /* Make the card content stretch evenly */
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    
+        /* Style for separating the cards */
+        .row {
+            gap: 20px; /* Odstępy między kartami w poziomie */
+        }
+    
+        .col {
+            flex: 0 0 31%; /* Trzy karty w rzędzie, każda zajmuje około 31% szerokości */
+        }
+    
+        @media (max-width: 768px) {
+            .col {
+                flex: 0 0 48%; /* Dwie karty w rzędzie na mniejszych ekranach */
+            }
+        }
+    
+        @media (max-width: 576px) {
+            .col {
+                flex: 0 0 100%; /* Jedna karta w rzędzie na bardzo małych ekranach */
+            }
+        }
+    </style>
+    
+    
+        {% endblock %}
+
+        {% block header_nav_items %}
+            <li><a href={{url_for ("index")}}>Home</a></li>
+            <li><a href={{url_for ("products")}}>Services</a></li>
+        {% endblock %}
+
+        <!-- Main content block -->
+        {% block content %}
+        <div class="album py-5 mt-5 bg-body-tertiary">
+            <div class="container">
+
+                <!-- Filter and search bar -->
+                <div class="filter-search-container">
+                    <form method="get" action="" class="d-flex">
+                        <select id="filter" name="filter" class="form-select me-2">
+                            <option value="">All posts</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.id }}" {% if request.args.get('filter') == tag.id %}selected{% endif %}>{{ tag.name }} {{ tag.id }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary1">Filter</button>
+                    </form>
+                    
+                    <form method="GET" action="{{ url_for('blog') }}" class="d-flex align-items-center ms-2">
+                        <label for="search" class="visually-hidden">Search by post name:</label>
+                        <input type="text" name="search" id="search" class="form-control me-2" value="{{ search_query }}" placeholder="Search posts...">
+                        <input type="hidden" name="category" value="{{ selected_category }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+                
+                
+
+               <!-- [Tags column filter]
+
+                <nav class="category-bar">
+                    <form method="get" action="" class="d-flex flex-column">
+                        <div id="filter" class="d-flex flex-column">
+                            {% for tag in tags %}
+                                <a href="?filter={{ tag.id }}" class="btn btn-link me-2 {% if request.args.get('filter') == tag.id %}active{% endif %}">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </nav>
+                <--
+
+        <!-- Blog post cards -->
+        <div class="album py-5 mt-5 bg-body-tertiary">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% set filter = request.args.get('filter') %}
+                    {% if filter %}
+                        {% set filter = filter | int %}
+                        {% for post in blog %}
+                            {% if filter in post.tagIds %}
+                                <div class="col">
+                                    {% include "modules/_post.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for post in blog %}
+                            <div class="col">
+                                {% include "modules/_post.html" %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Blog pagination">
+            <ul class="pagination justify-content-center mt-4">
+                {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('blog', page=page-1, category=request.args.get('category'), search=request.args.get('search')) }}">Previous page</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">{{ page }}</span>
+                </li>
+
+                {% if has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('blog', page=page+1, category=request.args.get('category'), search=request.args.get('search')) }}">Next page</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Vendor JS Files -->
+<script src={{url_for("static", filename="vendor/bootstrap/js/bootstrap.bundle.min.js")}}></script>
+
+<!-- Main JS File -->
+<script src={{url_for("static", filename="js/main.js")}}></script>  
+{% endblock %}
